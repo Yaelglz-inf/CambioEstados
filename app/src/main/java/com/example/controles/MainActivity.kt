@@ -7,19 +7,28 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.controles.databinding.ActivityMainBinding
 
 
 
-class MainViewModel : ViewModel() {
+class MainViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
-    var contador: Int = 0
+    var contador: Int
+        get()= savedStateHandle.get<Int>(CONTADOR_KEY) ?:0
+        set(value) = savedStateHandle.set(CONTADOR_KEY,value)
+
+
+
+
 }
 
 
 
 const val CONTADOR_KEY = "contador_key"
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -48,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         binding.button2.setOnClickListener {
 
             viewModel.contador += 1
+            binding.textView2.text = "contador: ${viewModel.contador}"
 
             actualizarUI()
             Toast.makeText(this, "contador: ${viewModel.contador}", Toast.LENGTH_SHORT).show()
